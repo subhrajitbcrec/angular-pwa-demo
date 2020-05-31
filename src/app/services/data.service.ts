@@ -7,21 +7,11 @@ import { DomSanitizer } from '@angular/platform-browser';
   providedIn: 'root'
 })
 export class DataService {
-  private baseURL = 'http://localhost:8080/listOfProjects/Angular';
+  private baseURL = 'https://list-of-projects-api.herokuapp.com/listOfProjects/Angular';
 
   projects: Array<Project> = [];
 
   constructor(private httpClient: HttpClient, private sanitizer: DomSanitizer) { }
-
-  /* fetch(): Observable<Project[]> {
-    const headerValues = {
-      userID: 'subhrajit',
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
-    };
-    return <Observable<Project[]>>this.httpClient.get(this.baseURL, headerValues);
-  } */
 
   fetch() {
     const headerValues = {
@@ -34,9 +24,11 @@ export class DataService {
       console.log(data);
       let proj: Project;
       for (const index in data) {
-        console.log(data[index].name);
-        proj = new Project(data[index].name, data[index].description, this.sanitize(data[index].gitURL), data[index].markdown);
-        this.projects.push(proj);
+        if(null != data[index]){
+          console.log(data[index].name);
+          proj = new Project(data[index].name, data[index].description, this.sanitize(data[index].gitURL), data[index].markdown);
+          this.projects.push(proj);
+        }
       }
     });
   }
